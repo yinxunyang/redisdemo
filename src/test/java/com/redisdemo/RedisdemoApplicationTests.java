@@ -11,18 +11,30 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class RedisdemoApplicationTests {
 
-	@Test
-	public void contextLoads() {
-	}
+    @Test
+    public void contextLoads() {
+    }
 
-	@Autowired
-	StringRedisTemplate stringRedisTemplate;
-	@Test
-	public void test()  {
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
 
-		// 保存字符串
-		stringRedisTemplate.opsForValue().set("aaa", "111");
+    @Autowired
+    private RedisMain redisMain;
 
-	}
+    @Test
+    public void test() {
+
+        // 保存字符串
+        stringRedisTemplate.opsForValue().set("aaa", "111");
+
+    }
+
+    @Test
+    public void test1(){
+        redisMain.useSessionCallback();
+    }
+
+
+
 
 }
