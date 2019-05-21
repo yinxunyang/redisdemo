@@ -18,23 +18,4 @@ public class RedisdemoApplicationTests {
     @Autowired
     StringRedisTemplate stringRedisTemplate;
 
-    @Autowired
-    private RedisMain redisMain;
-
-    @Test
-    public void test() {
-
-        // 保存字符串
-        stringRedisTemplate.opsForValue().set("aaa", "111");
-
-    }
-
-    @Test
-    public void test1(){
-        redisMain.useSessionCallback();
-    }
-
-
-
-
 }
