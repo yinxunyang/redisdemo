@@ -21,24 +21,22 @@ public class RedisController {
     private StringRedisTemplate stringRedisTemplate;
 
 
-    @RequestMapping("/testwatch")
+    @RequestMapping("/testpipeline")
     @ResponseBody
     public void testwatch() {
-        redisTemplate.opsForValue().set("k1", "v1");
-        List list = (List) redisTemplate.execute(
+        Long start = System.currentTimeMillis();
+        List list = (List) redisTemplate.executePipelined(
                 (RedisOperations redisop) -> {
-                    // 设置要监控的key值
-                    redisop.watch("k1");
-                    // 开启事务，在exec执行前，全部都只是进入队列
-                    redisop.multi();
-                    redisop.opsForValue().set("k2", "v2");
-                    // 因为k1是字符串，对字符串加一，显然是不能进行的
-                    redisop.opsForValue().increment("k1", 1);
-                    // 获取值将为空，因为redis只是把命令放入队列
-                    Object value = redisop.opsForValue().get("k2");
-                    return redisop.exec();
+                    for (int i = 0; i <= 100000; i++) {
+                        redisop.opsForValue().set("pipe_test" + i, "v_" + i);
+                    }
+                   /* for (int i = 0; i <= 100000; i++) {
+                        redisop.delete("pipe_test" + i);
+                    }*/
+                    return null;
                 }
         );
-        System.out.println(list);
+        Long end = System.currentTimeMillis();
+        System.out.println("耗时：" + (end - start) + "ms");
     }
 }
